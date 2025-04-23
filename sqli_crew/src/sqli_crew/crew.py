@@ -1,5 +1,11 @@
+import os
+from dotenv import load_dotenv
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+from langchain_openai import ChatOpenAI
+
+# Load environment variables first
+load_dotenv()
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -15,12 +21,21 @@ class SqliCrew():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
+    def __init__(self):
+        # Initialise LLM with API key
+        self.llm = ChatOpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            model="gpt-4", # or "gpt-4-turbo" if available
+            temperature=0.3
+        )
+
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def recon_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['recon_agent'],
+            llm=self.llm, # Assign the configured LLM
             verbose=True
         )
 
@@ -28,6 +43,7 @@ class SqliCrew():
     def scanner_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['scanner_agent'],
+            llm=self.llm,
             verbose=True
         )
     
@@ -35,6 +51,7 @@ class SqliCrew():
     def payload_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['payload_agent'],
+            llm=self.llm,
             verbose=True
         )
 
@@ -74,4 +91,5 @@ class SqliCrew():
             process=Process.sequential,
             verbose=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+            manager_llm=self.llm
         )
