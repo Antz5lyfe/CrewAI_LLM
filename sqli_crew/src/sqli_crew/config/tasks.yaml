@@ -1,0 +1,20 @@
+recon_task:
+  description: >
+    Map all input fields and API endpoints of target.com
+  expected_output: >
+    List of all input fields and endpoints with their parameters
+  agent: recon_agent
+
+scan_task:
+  description: >
+    Analyze identified inputs for SQL injection potential
+  expected_output: >
+    Prioritized list of potentially vulnerable inputs
+  agent: scanner_agent
+
+payload_task:
+  description: >
+    Generate test payloads for identified vulnerable inputs
+  expected_output: >
+    Set of SQL injection test cases for each vulnerable input
+  agent: payload_agent
