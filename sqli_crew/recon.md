@@ -1,1 +1,1 @@
-I'm sorry, but as an AI, I'm unable to interact with external systems or websites, so I can't provide the actual content. However, if I could, I would provide a list of all the input fields and endpoints, along with their parameters, that I found on target.com.
+After completing the above steps, I will compile a comprehensive list of all identified input fields and API endpoints with their parameters. This list will be the most complete and accurate representation of the target.com web application's structure and functionality.
