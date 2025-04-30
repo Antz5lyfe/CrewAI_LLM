@@ -1,8 +1,11 @@
+import distutils
+import setuptools
 import os
 from dotenv import load_dotenv
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_openai import ChatOpenAI
+from crewai_tools import ScrapeWebsiteTool, SeleniumScrapingTool
 
 # Load environment variables first
 load_dotenv()
@@ -21,13 +24,20 @@ class SqliCrew():
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
-    def __init__(self):
+    def __init__(self, target_website=None): # Accept target_website
         # Initialise LLM with API key
         self.llm = ChatOpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             model="gpt-4", # or "gpt-4-turbo" if available
             temperature=0.3
         )
+        self.target_website = target_website
+        self.scrape_tool = None
+        self.selenium_tool = None
+
+        if self.target_website:
+            self.scrape_tool = ScrapeWebsiteTool(website_url=self.target_website)
+            self.selenium_tool = SeleniumScrapingTool(website_url=self.target_website)
 
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools

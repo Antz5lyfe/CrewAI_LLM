@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import warnings
+from .utils import get_target_website
 
 from datetime import datetime
 
@@ -17,9 +18,13 @@ def run():
     """
     Run the crew.
     """
+    target_url = get_target_website()  # Get the website here
+    print(f"Targeting website: {target_url}")
+    sqli_crew = SqliCrew(target_website=target_url) # Pass the URL here
     inputs = {
         'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
+        'current_year': str(datetime.now().year),
+        'target_website': target_url
     }
     
     try:

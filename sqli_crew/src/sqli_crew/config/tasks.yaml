@@ -1,20 +1,57 @@
 recon_task:
   description: >
-    Map all input fields and API endpoints of target.com
+    You are a reconnaissance expert analyzing the website {{inputs.target_website}} for potential SQL injection vulnerabilities. Your goal is to understand the website's structure and identify potential entry points.
+    Use your web scraping tools to:
+    1.  Map the website's structure, including pages, directories, and subdomains.
+    2.  Identify technologies used (e.g., server software, programming languages, database systems).
+    3.  Find all HTML forms, input fields (text, search, etc.), and URL parameters that might accept user-supplied data.
+    4.  Document the purpose of each identified input field or parameter, if possible.
+    Focus on areas that could potentially interact with a database.
   expected_output: >
-    List of all input fields and endpoints with their parameters
+    A detailed report containing:
+    -   A site map or overview of the website's structure.
+    -   A list of identified technologies.
+    -   A comprehensive list of all input fields and URL parameters, including:
+        -   The page/URL where they are located.
+        -   The name/ID of the input field or parameter.
+        -   A brief description of its intended use.
+        -   Whether it appears to interact with a database.
   agent: recon_agent
 
 scan_task:
   description: >
-    Analyze identified inputs for SQL injection potential
+    You are a vulnerability scanner.  You've received a report from the reconnaissance agent detailing potential entry points on the website {{inputs.target_website}}. Your task is to analyze these inputs for their susceptibility to SQL injection.
+    For each input identified, perform the following:
+    1.  Categorize the input type (e.g., text field, dropdown, URL parameter).
+    2.  Consider the context of the input (e.g., is it used for login, search, filtering).
+    3.  Based on the input type and context, assess the likelihood of it being vulnerable to SQL injection.
+    4.  Prioritize inputs that are most likely to be vulnerable for further testing.
+    Do not attempt to exploit, only analyze.
   expected_output: >
-    Prioritized list of potentially vulnerable inputs
+    A prioritized list of potentially vulnerable inputs, including:
+    -   The page/URL where the input is located.
+    -   The name/ID of the input field or parameter.
+    -   The input type and its context.
+    -   A vulnerability likelihood rating (e.g., High, Medium, Low).
+    -   A brief justification for the vulnerability rating.
   agent: scanner_agent
 
 payload_task:
   description: >
-    Generate test payloads for identified vulnerable inputs
+    You are a payload generator. You have a prioritized list of potentially vulnerable inputs on the website {{inputs.target_website}}, provided by the vulnerability scanner. Your task is to create SQL injection payloads to test these inputs.
+    For each high and medium priority input:
+    1.  Generate a variety of SQL injection payloads designed to:
+        -   Extract data from the database.
+        -   Bypass authentication.
+        -   Modify database content.
+        -   Determine the database type and version.
+    2.  Include payloads that are specific to different database systems (e.g., MySQL, PostgreSQL, SQL Server).
+    3.  Document the purpose of each payload and the expected behavior.
+    4.  Consider different encoding methods if needed.
   expected_output: >
-    Set of SQL injection test cases for each vulnerable input
-  agent: payload_agent
+    A set of SQL injection test cases, organized by potentially vulnerable input.  Each test case should include:
+    -   The target page/URL and input field/parameter.
+    -   The SQL injection payload.
+    -   The intended purpose of the payload.
+    -   The expected behavior or outcome.
+    -   The target database system (if applicable).
