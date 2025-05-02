@@ -5,6 +5,8 @@ recon_agent:
     Identify all input fields and endpoints in the web application
   backstory: >
     Experienced in web application mapping and information gathering.
+  tools:
+    - selenium_scraping_tool
 
 scanner_agent:
   role: >

@@ -1,17 +1,22 @@
 recon_task:
   description: >
     You are a reconnaissance expert analyzing the website {{inputs.target_website}} for potential SQL injection vulnerabilities. Your goal is to understand the website's structure and identify potential entry points.
-    Use your web scraping tools to:
-    1.  Map the website's structure, including pages, directories, and subdomains.
-    2.  Identify technologies used (e.g., server software, programming languages, database systems).
-    3.  Find all HTML forms, input fields (text, search, etc.), and URL parameters that might accept user-supplied data.
+
+    **Your very first action MUST be to use the Selenium scraping tool with the command 'navigate to {{inputs.target_website}}'. Do this and report that the navigation is complete before moving to any other steps.**
+
+    Once you have successfully navigated the website using Selenium, then proceed to:
+    1.  Map the website's structure, including pages, directories, and subdomains. Use Selenium to interact with the site and find links.
+    2.  Identify technologies used (e.g., server software, programming languages, database systems) by examining the rendered content and potentially the page source.
+    3.  Find all HTML forms, input fields (text, search, etc.), and URL parameters that might accept user-supplied data. Use Selenium to find these elements in the rendered DOM.
     4.  Document the purpose of each identified input field or parameter, if possible.
+
     Focus on areas that could potentially interact with a database.
   expected_output: >
     A detailed report containing:
-    -   A site map or overview of the website's structure.
-    -   A list of identified technologies.
-    -   A comprehensive list of all input fields and URL parameters, including:
+    -   Confirmation that Selenium navigation to {{inputs.target_website}} was successful.
+    -   A site map or overview of the website's structure (obtained through Selenium).
+    -   A list of identified technologies (gleaned from the rendered content).
+    -   A comprehensive list of all input fields and URL parameters (found using Selenium), including:
         -   The page/URL where they are located.
         -   The name/ID of the input field or parameter.
         -   A brief description of its intended use.

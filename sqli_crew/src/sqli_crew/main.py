@@ -28,7 +28,7 @@ def run():
     }
     
     try:
-        SqliCrew().crew().kickoff(inputs=inputs)
+        sqli_crew.crew().kickoff(inputs=inputs)
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 

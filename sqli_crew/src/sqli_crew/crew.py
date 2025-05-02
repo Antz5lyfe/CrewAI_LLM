@@ -1,4 +1,4 @@
-import distutils
+# import distutils
 import setuptools
 import os
 from dotenv import load_dotenv
@@ -46,7 +46,8 @@ class SqliCrew():
         return Agent(
             config=self.agents_config['recon_agent'],
             llm=self.llm, # Assign the configured LLM
-            verbose=True
+            verbose=True,
+            tools=[self.scrape_tool, self.selenium_tool] # Ensure both tools are available
         )
 
     @agent
@@ -72,6 +73,7 @@ class SqliCrew():
     def recon_task(self) -> Task:
         return Task(
             config=self.tasks_config['recon_task'],
+            agent=self.recon_agent(),  # Call the agent method to get the Agent object
             output_file='recon.md'
         )
 
@@ -79,6 +81,7 @@ class SqliCrew():
     def scan_task(self) -> Task:
         return Task(
             config=self.tasks_config['scan_task'],
+            agent=self.scanner_agent(),  # Call the agent method to get the Agent object
             output_file='scan.md'
         )
     
@@ -86,6 +89,7 @@ class SqliCrew():
     def payload_task(self) -> Task:
         return Task(
             config=self.tasks_config['payload_task'],
+            agent=self.payload_agent(),  # Call the agent method to get the Agent object
             output_file='payload.md'
         )
 
@@ -94,6 +98,23 @@ class SqliCrew():
         """Creates the SqliCrew crew"""
         # To learn how to add knowledge sources to your crew, check out the documentation:
         # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
+
+        if self.target_website:
+            self.scrape_tool = ScrapeWebsiteTool(website_url=self.target_website)
+            self.selenium_tool = SeleniumScrapingTool(website_url=self.target_website)
+        else:
+            raise ValueError("Target website URL must be provided before creating the crew.")
+
+        reconnaissance_agent = self.recon_agent()
+        reconnaissance_agent.tools = [self.scrape_tool, self.selenium_tool]
+
+        scanner_agent = self.scanner_agent()
+        # Scanner agent might not need these tools, but you can add them if needed
+        # scanner_agent.tools = [...]
+
+        payload_generator_agent = self.payload_agent()
+        # Payload generator agent likely doesn't need these tools
+        # payload_generator_agent.tools = [...]
 
         return Crew(
             agents=self.agents, # Automatically created by the @agent decorator
