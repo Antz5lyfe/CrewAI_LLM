@@ -11,9 +11,5 @@ __pycache__/
 *.py[cod]
 
 # Agent Reports
-payload.md
-recon.md
-scan.md
-
-# Test Scripts
-test_import.py
+*.md
+!README.md
